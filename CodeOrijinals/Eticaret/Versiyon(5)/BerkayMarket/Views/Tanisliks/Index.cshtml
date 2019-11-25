@@ -1,0 +1,69 @@
+﻿@model IEnumerable<BerkayMarket.Models.Tanislik>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<BmUser> userManager
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                İye Adı
+                @*@Html.DisplayNameFor(model => model.IyeId)*@
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tanis)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Durumlar)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @{ var iye = await userManager.FindByIdAsync(item.IyeId);}
+                    @iye.UserName
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tanis.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Durumlar)
+                </td>
+                <td>
+                    @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
+                    @if ((await AuthorizationService.AuthorizeAsync(
+                            User, item,
+                            TanisIslemleri.Update)).Succeeded)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <text> | </text>
+                    }
+
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+
+                    @if ((await AuthorizationService.AuthorizeAsync(
+                    User, item,
+                    TanisIslemleri.Delete)).Succeeded)
+                    {
+                        <text> | </text>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

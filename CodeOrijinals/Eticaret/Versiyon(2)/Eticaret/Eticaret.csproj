@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+    <UserSecretsId>d1c3ed13-c161-4f18-b8d5-aca68955c89a</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Views\Iyeliks\**" />
+    <Compile Remove="Views\KullaniciIslemleri\**" />
+    <Content Remove="Views\Iyeliks\**" />
+    <Content Remove="Views\KullaniciIslemleri\**" />
+    <EmbeddedResource Remove="Views\Iyeliks\**" />
+    <EmbeddedResource Remove="Views\KullaniciIslemleri\**" />
+    <None Remove="Views\Iyeliks\**" />
+    <None Remove="Views\KullaniciIslemleri\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Areas\Identity\Data\EticaretContextEx.cs" />
+    <Compile Remove="Areas\Identity\Data\EticaretUser.cs" />
+    <Compile Remove="Areas\Identity\Data\EticaretUserEx.cs" />
+    <Compile Remove="Areas\Identity\IdentityHostingStartup.cs" />
+    <Compile Remove="Controllers\IyeliksController.cs" />
+    <Compile Remove="Controllers\KullaniciIslemleriController.cs" />
+    <Compile Remove="Data\UygVTContextEx.cs" />
+    <Compile Remove="Models\Kullanici.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Shared\_LoginPartial2.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="veri.db-journal" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Data\" />
+    <Folder Include="wwwroot\resimler\" />
+  </ItemGroup>
+
+</Project>
