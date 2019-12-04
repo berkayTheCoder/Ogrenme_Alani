@@ -1,0 +1,63 @@
+﻿@model BerkayMarket.Models.Siparis
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Siparis</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="SiparisVerenUserId" class="control-label"></label>
+                <select asp-for="SiparisVerenUserId" class="form-control" asp-items="ViewBag.SiparisVerenUserId"></select>
+                <span asp-validation-for="SiparisVerenUserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UrunId" class="control-label"></label>
+                <select asp-for="UrunId" class="form-control" asp-items="ViewBag.UrunId"></select>
+                <span asp-validation-for="UrunId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SiparisAlanUserId" class="control-label"></label>
+                <select asp-for="SiparisAlanUserId" class="form-control" asp-items="ViewBag.SiparisAlanUserId"></select>
+                <span asp-validation-for="SiparisAlanUserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SiparisDurumu" class="control-label"></label>
+                <select asp-for="SiparisDurumu" class="form-control">
+                    <option>@SiparisDurumu.SiparisVer</option>
+                    <option>@SiparisDurumu.Onayla</option>
+                    <option>@SiparisDurumu.Reddet</option>
+                </select>
+                <span asp-validation-for="SiparisDurumu" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Miktari" class="control-label"></label>
+                <input asp-for="Miktari" class="form-control" />
+                <span asp-validation-for="Miktari" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SiparisMetni" class="control-label"></label>
+                <input asp-for="SiparisMetni" class="form-control" />
+                <span asp-validation-for="SiparisMetni" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

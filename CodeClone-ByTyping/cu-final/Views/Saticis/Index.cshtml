@@ -1,0 +1,125 @@
+﻿@model BerkayMarket.Models.SchoolViewModels.SaticiIndexData
+
+@{
+    ViewData["Title"] = "Saticis";
+}
+
+<h2>Saticis</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Hire Date</th>
+            <th>Office</th>
+            <th>Uruns</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Saticis)
+        {
+            string selectedRow = "";
+            if (item.ID == (int?)ViewData["SaticiID"])
+            {
+                selectedRow = "success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstMidName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HireDate)
+                </td>
+                <td>
+                    @if (item.OfficeAssignment != null)
+                    {
+                        @item.OfficeAssignment.Location
+                    }
+                </td>
+                <td>
+                    @{
+                        foreach (var Urun in item.Envanters)
+                        {
+                            @Urun.Urun.UrunID @:  @Urun.Urun.Title <br />
+                        }
+                    }
+                </td>
+                <td>
+                    <a asp-action="Index" asp-route-id="@item.ID">Select</a> |
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.Uruns != null)
+{
+    <h3>Uruns Taught by Selected Satici</h3>
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>Number</th>
+            <th>Title</th>
+            <th>Kategori</th>
+        </tr>
+
+        @foreach (var item in Model.Uruns)
+        {
+            string selectedRow = "";
+            if (item.UrunID == (int?)ViewData["UrunID"])
+            {
+                selectedRow = "success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.ActionLink("Select", "Index", new { UrunID = item.UrunID })
+                </td>
+                <td>
+                    @item.UrunID
+                </td>
+                <td>
+                    @item.Title
+                </td>
+                <td>
+                    @item.Kategori.Name
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+@if (Model.Sipariss != null)
+{
+    <h3>
+        Musteris Enrolled in Selected Urun
+    </h3>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Grade</th>
+        </tr>
+        @foreach (var item in Model.Sipariss)
+        {
+            <tr>
+                <td>
+                    @item.Musteri.FullName
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Grade)
+                </td>
+            </tr>
+        }
+    </table>
+}

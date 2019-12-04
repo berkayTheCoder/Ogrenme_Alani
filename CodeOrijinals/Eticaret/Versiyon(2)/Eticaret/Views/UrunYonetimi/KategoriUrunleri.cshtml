@@ -1,0 +1,107 @@
+﻿@model Kategori
+@inject UygVTContext context
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<EticaretUser> SignInManager
+@inject UserManager<EticaretUser> UserManager
+@inject RoleManager<EticaretRole> RoleManager
+@{
+    ViewData["Title"] = "KategoriUrunleri";
+    //var kategori = Model.First().Kategori;
+}
+
+
+
+<h1><span class="text-danger">@Model.Adi</span> Kategorisinin Ürünleri</h1>
+
+<p>
+    <a asp-action="Create" asp-controller="UrunYonetimi" asp-route-id="@Model.Id" class="btn btn-light"><i class="fas fa-barcode"></i> Ürün Ekle</a>
+</p>
+<form method="post">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="Tumunu_Sec">
+                        <label class="custom-control-label" for="Tumunu_Sec">@Html.DisplayNameFor(model => model.Urunleri[0].Adi)</label>
+                    </div>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Urunleri[0].Resim)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Urunleri[0].Stok)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Urunleri)
+            {
+                <tr>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" name="SeciliUrunler" value="@item.Id" class="custom-control-input cbUrun" id="@item.Id">
+                            <label class="custom-control-label" for="@item.Id">@Html.DisplayFor(modelItem => item.Adi)</label>
+                        </div>
+                    </td>
+                    <td>
+                        <img src="~/resimler/@item.Resim" class="rounded" style="height:50px" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Stok)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-light btn-sm"><i class="far fa-edit"></i> Düzenle</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-light btn-sm"><i class="far fa-file-alt"></i> Detay</a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm"><i class="far fa-trash-alt"></i> Sil</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="row">
+        <div class="col-4">
+            <select name="HedefKategoriId" class="form-control">
+                @foreach (var item in await context.Kategoriler.Include(x => x.Urunleri).ToListAsync())
+                {
+                    <option value="@item.Id">@item.Adi (@item.Urunleri.Count ürün)</option>
+                }
+            </select>
+        </div>
+        <div class="col-5">
+            <input type="submit" asp-action="TopluTasi" name="btnTasi" value="Kategorisine Taşı" class="btn btn-outline-success" />
+            <input type="submit" asp-action="TopluSil" name="btnSil" value="Seçilenleri Sil" class="btn btn-outline-danger" />
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#Tumunu_Sec').on('click', function () {
+                if (this.checked) {
+                    $('.cbUrun').each(function () {
+                        this.checked = true;
+                    });
+                } else {
+                    $('.cbUrun').each(function () {
+                        this.checked = false;
+                    });
+                }
+            });
+
+            $('.cbUrun').on('click', function () {
+                if ($('.cbUrun:checked').length == $('.cbUrun').length) {
+                    $('#Tumunu_Sec').prop('checked', true);
+                } else {
+                    $('#Tumunu_Sec').prop('checked', false);
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,35 @@
+﻿@model IEnumerable<BerkayMarket.Models.BmUserRole>
+@inject  ApplicationDbContext context
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>BmUser</th>
+            <th>BmRole</th>
+            <th>işlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>@context.Users.Single(u=>u.Id==item.UserId)</td>
+                <td>@context.Roles.Single(u=>u.Id==item.RoleId)</td>
+                <td>
+                    @*@Html.ActionLink("Edit", "Edit", new { id=item.UserId/* id=item.PrimaryKey */ }) |*@
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { id=item.UserId,rid=item.RoleId/* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
