@@ -5,7 +5,8 @@ using System.Text;
 
 namespace ShopApp.DataAccess.Abstract
 {
-    public interface ICartDal: IRepository<Cart>
+    public interface ICartDal : IRepository<Cart>
     {
+        Cart GetCartByUserId(string userId);
     }
 }
