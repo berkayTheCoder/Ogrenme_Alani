@@ -6,7 +6,10 @@ namespace ShopApp.Entities
 {
    public class Order
     {
-        
+        public Order()
+        {
+            OrderItems = new List<OrderItem>();
+        }
         public int Id { get; set; }
 
         public string OrderNumber { get; set; }
@@ -32,14 +35,14 @@ namespace ShopApp.Entities
         public List<OrderItem> OrderItems { get; set; }
     }
 
-    public enum EnumPaymentTypes
+    public enum EnumOrderState
     {
         waiting = 0,
         Unpadid = 1,
         Completed = 2
     }
 
-    public enum EnumOrderState
+    public enum EnumPaymentTypes
     {
         CreditCart = 0,
         Eft = 1

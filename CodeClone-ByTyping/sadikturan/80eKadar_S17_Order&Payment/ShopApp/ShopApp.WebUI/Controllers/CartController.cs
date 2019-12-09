@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ShopApp.Business.Abstract;
+using ShopApp.Entities;
 using ShopApp.WebUI.Identity;
 using ShopApp.WebUI.Models;
 
@@ -20,11 +21,13 @@ namespace ShopApp.WebUI.Controllers
     {
         private ICartService _cartService;
         private UserManager<ApplicationUser> _userManager;
+        private IOrderService _orderService;
 
-        public CartController(ICartService cartService,UserManager<ApplicationUser> userManager)
+        public CartController(ICartService cartService,UserManager<ApplicationUser> userManager, IOrderService orderService)
         {
             _cartService = cartService;
             _userManager = userManager;
+            _orderService = orderService;
         }
         public IActionResult Index()
         {
@@ -81,14 +84,64 @@ namespace ShopApp.WebUI.Controllers
         [HttpPost]
         public IActionResult Checkout(OrderModel model)
         {
-            var payment = PaymentProcess(model);
-            if (payment.Status == "success")
+            if (ModelState.IsValid)
             {
-                return View("Success");
+                var userId = _userManager.GetUserId(User);
+                var cart = _cartService.GetCartByUserId(userId);
+
+                model.CartModel = new CartModel()
+                {
+                    CartId = cart.Id,
+                    CartItems = cart.CartItems.Select(i => new CartItemModel()
+                    {
+                        CartItemId = i.Id,
+                        ProductId = i.ProductId,
+                        Name = i.Product.Name,
+                        Price = (decimal)i.Product.Price,
+                        ImageUrl = i.Product.ImageUrl,
+                        Quantity = i.Quantity,
+                    }).ToList()
+                };
+
+                var payment = PaymentProcess(model);
+
+                if (payment.Status == "success")
+                {
+                    SaveOrder(model, payment, userId);
+                    return View("Success");
+                }
             }
             return View(model);
         }
 
+        private void SaveOrder(OrderModel model, Payment payment, string userId)
+        {
+            var order = new Order();
+
+            order.OrderNumber = new Random().Next(111111, 999999).ToString();
+            order.OrderState = EnumOrderState.Completed;
+            order.PaymentTypes = EnumPaymentTypes.CreditCart;
+            order.PaymentId = payment.PaymentId;
+            order.ConservationId = payment.ConversationId;
+            order.OrderDate = new DateTime();
+            order.FirstName = model.FirstName;
+            order.LastName = model.LastName;
+            order.Email = model.Email;
+            order.Phone = model.Phone;
+            order.Address = model.Address;
+            order.UserId = userId;
+            foreach (var item in model.CartModel.CartItems)
+            {
+                var orderItem = new OrderItem()
+                {
+                    Price = item.Price,
+                    Quantity = item.Quantity,
+                    ProductId = item.ProductId,
+                };
+                order.OrderItems.Add(orderItem);
+            }
+            _orderService.Create(order);
+        }
         private Payment PaymentProcess(OrderModel model)
         {
             #region paymentprocess
@@ -116,6 +169,7 @@ namespace ShopApp.WebUI.Controllers
                 ;
             request.PaymentChannel = PaymentChannel.WEB.ToString();
             request.PaymentGroup = PaymentGroup.PRODUCT.ToString();
+
 
             PaymentCard paymentCard = new PaymentCard();
             paymentCard.CardHolderName = 
