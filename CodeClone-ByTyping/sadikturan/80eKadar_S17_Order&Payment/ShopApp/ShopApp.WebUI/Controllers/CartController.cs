@@ -108,10 +108,16 @@ namespace ShopApp.WebUI.Controllers
                 if (payment.Status == "success")
                 {
                     SaveOrder(model, payment, userId);
+                    ClearCart(cart.Id.ToString());
                     return View("Success");
                 }
             }
             return View(model);
+        }
+
+        private void ClearCart(string cartId)
+        {
+            _cartService.ClearCart(cartId);
         }
 
         private void SaveOrder(OrderModel model, Payment payment, string userId)

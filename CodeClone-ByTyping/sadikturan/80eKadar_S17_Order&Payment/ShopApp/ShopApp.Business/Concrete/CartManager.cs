@@ -38,6 +38,11 @@ namespace ShopApp.Business.Concrete
             _cartDal.Update(cart);
         }
 
+        public void ClearCart(string cartId)
+        {
+            _cartDal.ClearCart(cartId);
+        }
+
         public void DeleteFromCart(string userId, int productId)
         {
             var cart = GetCartByUserId(userId);
